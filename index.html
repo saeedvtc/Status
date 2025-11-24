@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>حساب الأيام فوق 179</title>
+    <title>حساب الأيام والشهور والسنوات</title>
     <style>
         body { font-family: Arial; margin: 40px; }
         input, button { padding: 10px; margin: 10px 0; font-size: 16px; }
@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <h2>حساب الأيام فوق 179 يوم</h2>
+    <h2>حساب الأيام والشهور والسنوات فوق 179 يوم</h2>
 
     <label>تاريخ الخروج:</label><br>
     <input type="date" id="exitDate"><br>
@@ -32,17 +32,32 @@
             }
 
             let today = new Date();
-            let diffTime = today - exitDate;
-            let days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-            let outputDiv = document.getElementById("output");
-            
-            let status = days > 179 ? "مخالف" : "غير مخالف";
-            let className = days > 179 ? "violation" : "ok";
+            // حساب الفرق الكلي بالأيام
+            let totalDays = Math.floor((today - exitDate) / (1000 * 60 * 60 * 24));
 
-            outputDiv.innerHTML =
-                "تاريخ القدوم (تلقائي): " + today.toISOString().split("T")[0] + "<br>" +
-                "عدد الأيام الكلي: " + days + "<br>" +
+            // حساب السنوات
+            let years = today.getFullYear() - exitDate.getFullYear();
+            let months = today.getMonth() - exitDate.getMonth();
+            let days = today.getDate() - exitDate.getDate();
+
+            if (days < 0) {
+                months -= 1;
+                let prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+
+            if (months < 0) {
+                years -= 1;
+                months += 12;
+            }
+
+            let status = totalDays > 179 ? "مخالف" : "غير مخالف";
+            let className = totalDays > 179 ? "violation" : "ok";
+
+            document.getElementById("output").innerHTML =
+                "تاريخ القدوم (تلقائي): " + today.toISOString().split("T")[0] + "<br><br>" +
+                "الفرق: " + days + " أيام، " + months + " شهور، " + years + " سنوات<br>" +
                 "الحالة: <span class='" + className + "'>" + status + "</span>";
         }
     </script>
